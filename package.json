@@ -21,10 +21,14 @@
     "@handlebars/allow-prototype-access": "^1.0.3",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
     "express-handlebars": "^4.0.6",
+    "filepond": "^4.25.1",
+    "handlebars": "^4.7.6",
+    "handlebars-helpers": "^0.10.0",
+    "helper-date": "^1.0.1",
+    "moment": "^2.29.1",
     "mongoose": "^5.11.12"
   },
-  "devDependencies": {
-    "handlebars": "^4.5.0"
-  }
+  "devDependencies": {}
 }

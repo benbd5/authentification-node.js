@@ -9,6 +9,14 @@ const articlesSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  author: {
+    type: String,
+  },
+  image: String,
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
 });
 
 const Article = mongoose.model("Article", articlesSchema);
