@@ -5,6 +5,10 @@ const port = process.env.PORT || 3000;
 
 const mongoose = require("mongoose");
 const exphbs = require("express-handlebars");
+const Handlebars = require("handlebars");
+const {
+  allowInsecurePrototypeAccess,
+} = require("@handlebars/allow-prototype-access");
 const bodyParser = require("body-parser");
 
 const Post = require("./database/models/articles");
@@ -23,12 +27,19 @@ mongoose.connect("mongodb://localhost:27017/blog_philippe", {
 app.use(express.static("public"));
 
 // Handlebars
-app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
+app.engine(
+  "handlebars",
+  exphbs({
+    handlebars: allowInsecurePrototypeAccess(Handlebars),
+  })
+);
 
 // Routes
-app.get("/", (req, res) => {
-  res.render("index");
+app.get("/", async (req, res) => {
+  const posts = await Post.find({});
+
+  res.render("index", { posts });
 });
 
 app.get("/contact", (req, res) => {
@@ -36,6 +47,12 @@ app.get("/contact", (req, res) => {
 });
 
 // Articles
+app.get("/articles/:id", async (req, res) => {
+  const article = await Post.findById(req.params.id);
+
+  res.render("articles", { article });
+});
+
 app.get("/articles/add", (req, res) => {
   res.render("articles/add");
 });
