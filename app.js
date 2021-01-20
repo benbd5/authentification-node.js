@@ -35,28 +35,30 @@ app.engine(
   })
 );
 
-// Controllers
+// Controllers articles
 const createArticleController = require("./controllers/articleAdd");
 const homePageController = require("./controllers/homePage");
 const contactController = require("./controllers/contact");
 const articleSingleController = require("./controllers/articleSingle");
 const articlePostController = require("./controllers/articlePost");
 
-const middleware = (req, res, next) => {
-  if (!req.files) {
-    return res.redirect("/");
-  }
-  next();
-};
+// Controllers users
+const userCreate = require("./controllers/userCreate");
+const userRegister = require("./controllers/userRegister");
 
-app.use("/articles/post", middleware);
+const articleValidPost = require("./middleware/articleValidPost");
+app.use("/articles/post", articleValidPost);
 
-// Routes
+// Routes articles
 app.get("/", homePageController);
 app.get("/contact", contactController);
 app.get("/articles/add", createArticleController);
 app.get("/articles/:id", articleSingleController);
 app.post("/articles/post", articlePostController);
+
+// Routes users
+app.get("/user/create", userCreate);
+app.post("/user/register", userRegister);
 
 // Server
 app.listen(port, () => {
