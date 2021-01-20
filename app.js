@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 
-const path = require("path");
 const mongoose = require("mongoose");
 const exphbs = require("express-handlebars");
 const Handlebars = require("handlebars");
@@ -12,8 +11,6 @@ const {
 } = require("@handlebars/allow-prototype-access");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
-
-const Post = require("./database/models/articles");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -38,46 +35,28 @@ app.engine(
   })
 );
 
+// Controllers
+const createArticleController = require("./controllers/articleAdd");
+const homePageController = require("./controllers/homePage");
+const contactController = require("./controllers/contact");
+const articleSingleController = require("./controllers/articleSingle");
+const articlePostController = require("./controllers/articlePost");
+
+const middleware = (req, res, next) => {
+  if (!req.files) {
+    return res.redirect("/");
+  }
+  next();
+};
+
+app.use("/articles/post", middleware);
+
 // Routes
-app.get("/", async (req, res) => {
-  const posts = await Post.find({});
-
-  res.render("index", { posts });
-});
-
-app.get("/contact", (req, res) => {
-  res.render("contact");
-});
-
-// Articles
-app.get("/articles/:id", async (req, res) => {
-  const article = await Post.findById(req.params.id);
-
-  res.render("articles", { article });
-});
-
-app.get("/article/add", (req, res) => {
-  res.render("articles/add");
-});
-
-// Post
-app.post("/articles/post", (req, res) => {
-  const image = req.files.image;
-
-  const uploadFile = path.resolve(__dirname, "public/articles", image.name);
-
-  image.mv(uploadFile, (err) => {
-    Post.create(
-      {
-        ...req.body,
-        image: `/articles/${image.name}`,
-      },
-      (err, post) => {
-        res.redirect("/");
-      }
-    );
-  });
-});
+app.get("/", homePageController);
+app.get("/contact", contactController);
+app.get("/articles/add", createArticleController);
+app.get("/articles/:id", articleSingleController);
+app.post("/articles/post", articlePostController);
 
 // Server
 app.listen(port, () => {
