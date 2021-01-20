@@ -4,16 +4,16 @@ const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, "Le nom est obligatoire"],
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "L'email est obligatoire"],
     unique: true,
   },
   password: {
     type: String,
-    required: true,
+    required: [true, "Le mot de passe est obligatoire"],
   },
 });
 

@@ -11,12 +11,12 @@ const {
 } = require("@handlebars/allow-prototype-access");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
-const expressSession = require("express-session");
+const expressSession = require("express-session"); // pour les cookies
+const MongoStore = require("connect-mongo")(expressSession); // stock cookie dans mongoDB
+const flash = require("connect-flash");
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(fileUpload());
-app.use(expressSession({ secret: "secretKey", name: "cookie" }));
+const auth = require("./middleware/auth");
+const redirectAuth = require("./middleware/redirectAuth");
 
 // Mongoose
 mongoose.connect("mongodb://localhost:27017/blog_philippe", {
@@ -24,6 +24,21 @@ mongoose.connect("mongodb://localhost:27017/blog_philippe", {
   useCreateIndex: true,
   useUnifiedTopology: true,
 });
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(fileUpload());
+app.use(
+  expressSession({
+    secret: "secretKey",
+    name: "cookie",
+    resave: false,
+    saveUninitialized: true,
+
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  })
+);
+app.use(flash());
 
 // Static
 app.use(express.static("public"));
@@ -36,6 +51,11 @@ app.engine(
     handlebars: allowInsecurePrototypeAccess(Handlebars),
   })
 );
+app.use("*", (req, res, next) => {
+  res.locals.user = req.session.userId;
+  console.log(res.locals.user);
+  next();
+});
 
 // Controllers articles
 const createArticleController = require("./controllers/articleAdd");
@@ -49,22 +69,29 @@ const userCreate = require("./controllers/userCreate");
 const userRegister = require("./controllers/userRegister");
 const userLogin = require("./controllers/userLogin");
 const userLoginAuth = require("./controllers/userLoginAuth");
+const userLogout = require("./controllers/userLogout");
 
 const articleValidPost = require("./middleware/articleValidPost");
 app.use("/articles/post", articleValidPost);
+app.use("/articles/add", auth);
 
 // Routes articles
 app.get("/", homePageController);
 app.get("/contact", contactController);
-app.get("/articles/add", createArticleController);
+app.get("/articles/add", auth, createArticleController);
 app.get("/articles/:id", articleSingleController);
-app.post("/articles/post", articlePostController);
+app.post("/articles/post", auth, articleValidPost, articlePostController);
 
 // Routes users
-app.get("/user/create", userCreate);
-app.get("/user/login", userLogin);
-app.post("/user/register", userRegister);
-app.post("/user/loginAuth", userLoginAuth);
+app.get("/user/create", redirectAuth, userCreate);
+app.get("/user/login", redirectAuth, userLogin);
+app.get("/user/logout", userLogout);
+app.post("/user/register", redirectAuth, userRegister);
+app.post("/user/loginAuth", redirectAuth, userLoginAuth);
+
+app.use((req, res) => {
+  res.render("error404");
+});
 
 // Server
 app.listen(port, () => {

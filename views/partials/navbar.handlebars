@@ -12,16 +12,11 @@
       </div>
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <a class="menu-link" href="/contact">
-                Contactez nous
-              </a>
-            </div>
-          </div>
+          
 
 
               {{!-- ne s'affiche que lorsqu'un utilisateur est connecté --}}
+              {{#if user}}
               <div class="navbar-item">
                 <div class="buttons">
                   <a class="menu-link" href="/articles/add">
@@ -29,6 +24,15 @@
                   </a>
                 </div>
               </div>
+
+              <div class="navbar-item">
+                <div class="buttons">
+                  <a class="menu-link" href="/user/logout">
+                    Déconnexion
+                  </a>
+                </div>
+              </div>
+              {{else}}
 
               <div class="navbar-item">
                 <div class="buttons">
@@ -46,6 +50,17 @@
                   </a>
                 </div>
               </div>
+              {{/if}}
+
+
+              <div class="navbar-item">
+                <div class="buttons">
+                  <a class="menu-link" href="/contact">
+                    Contactez nous
+                  </a>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
