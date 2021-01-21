@@ -49,6 +49,8 @@
                 </a>
                 <p>{{stripTags this.content}}</p>
                 <p>Publié par {{this.author}}, le {{ createdAt }}</p>
+
+                {{#if user}}
                 <div class="field">
                   <form action="/articles/edit/{{ this._id }}" >
                     <button type="submit">Modifier</button>
@@ -57,6 +59,8 @@
                     <button type="submit">Supprimer</button>
                   </form>
                 </div>
+                {{/if}}
+
               </div>
             </div>
           </div>

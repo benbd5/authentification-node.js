@@ -100,7 +100,7 @@ app.get("/articles/:id", articleSingleController); // show article
 app.get("/articles/edit/:id", auth, articleEditController); // edit article
 app.put("/articles/:id", auth, articleUpdateController); // update article
 app.post("/articles/post", auth, articleValidPost, articlePostController);
-app.post("/articles/:id", auth, articleDeleteController);
+app.delete("/articles/:id", auth, articleDeleteController);
 
 // Routes users
 app.get("/user/create", redirectAuth, userCreate);

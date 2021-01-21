@@ -7,13 +7,15 @@
         <p>{{ stripTags article.content}}</p>
         <p>Auteur : <strong>{{article.author}}</strong></p>
 
+        {{#if user}}
         <div class="field">
             <form action="/articles/edit/{{ article._id }}" >
                 <button type="submit">Modifier</button>
             </form>
-            <form action="/article/{{ article._id }}/?_method=DELETE" method="POST">
-                <button type="submit">Effacer</button>
+            <form action="/articles/{{ article._id }}/?_method=DELETE" method="POST">
+                <button type="submit">Supprimer</button>
             </form>
         </div>
+        {{/if}}
     </div>
 </section>

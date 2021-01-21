@@ -1,5 +1,10 @@
+const Article = require("../database/models/articles");
+
 module.exports = async (req, res) => {
-  const article = await Post.findById(req.params.id);
+  let article;
+  article = await Article.findById(req.params.id); // on récupère l'id
+
+  await article.remove(); // remove of db
 
   res.redirect("/");
 };
