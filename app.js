@@ -5,7 +5,7 @@ const port = process.env.PORT || 3000;
 
 const mongoose = require("mongoose");
 const exphbs = require("express-handlebars");
-const Handlebars = require("handlebars");
+// const Handlebars = require("handlebars");
 const {
   allowInsecurePrototypeAccess,
 } = require("@handlebars/allow-prototype-access");
@@ -14,6 +14,9 @@ const fileUpload = require("express-fileupload");
 const expressSession = require("express-session"); // pour les cookies
 const MongoStore = require("connect-mongo")(expressSession); // stock cookie dans mongoDB
 const flash = require("connect-flash");
+const { stripTags } = require("./helpers/hbs");
+
+var helpers = require("handlebars-helpers")();
 
 const auth = require("./middleware/auth");
 const redirectAuth = require("./middleware/redirectAuth");
@@ -43,12 +46,20 @@ app.use(flash());
 // Static
 app.use(express.static("public"));
 
+// Moment (Handlebars)
+var Handlebars = require("handlebars");
+var MomentHandler = require("handlebars.moment");
+MomentHandler.registerHelpers(Handlebars);
+
 // Handlebars
 app.set("view engine", "handlebars");
 app.engine(
   "handlebars",
   exphbs({
     handlebars: allowInsecurePrototypeAccess(Handlebars),
+    helpers: {
+      stripTags: stripTags,
+    },
   })
 );
 app.use("*", (req, res, next) => {

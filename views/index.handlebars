@@ -47,8 +47,11 @@
                 <a href="/articles/{{_id}}">
                 <h2>{{this.title}}</h2>
                 </a>
-                <p>{{this.content}}</p>
+                <p>{{stripTags this.content}}</p>
                 <p>Publié par {{this.author}}, le {{ createdAt }}</p>
+                <form action="/article/{{ this._id }}/?_method=DELETE" method="post">
+                  <button type="submit">Effacer</button>
+                </form>
               </div>
             </div>
           </div>

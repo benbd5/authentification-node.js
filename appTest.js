@@ -4,9 +4,11 @@ const Article = require("./database/models/articles");
 
 mongoose.connect("mongodb://localhost:27017/blog-test");
 
-Article.find({}, (err, articles) => {
-  console.log(err, articles);
-});
+Article.find({})
+  .lean()
+  .exec((err, articles) => {
+    console.log(err, articles);
+  });
 
 Article.create(
   {

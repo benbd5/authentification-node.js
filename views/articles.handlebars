@@ -3,7 +3,7 @@
         <h1 class="title">
             {{article.title}}
         </h1>
-        <p>{{article.content}}</p>
+        <p>{{ stripTags article.content}}</p>
         <img src="{{article.image}}">
     </div>
 </section>
