@@ -1,7 +1,18 @@
-const Post = require("../database/models/articles");
+const Article = require("../database/models/articles");
 
 module.exports = async (req, res) => {
-  const article = await Post.findById(req.params.id);
+  let article;
+  try {
+    article = await Article.findById(req.params.id);
+    article.title = req.body.title;
+    article.content = req.body.content;
+    article.author = req.body.author;
 
-  res.render("edit", { article });
+    await article.save();
+    console.log(article);
+    res.redirect(`${article.id}`);
+  } catch (err) {
+    console.log(err);
+    res.redirect("/");
+  }
 };

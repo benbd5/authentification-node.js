@@ -78,6 +78,7 @@ const contactController = require("./controllers/contact");
 const articleSingleController = require("./controllers/articleSingle");
 const articlePostController = require("./controllers/articlePost");
 const articleUpdateController = require("./controllers/articleUpdate");
+const articleEditController = require("./controllers/articleEdit");
 const articleDeleteController = require("./controllers/articleDelete");
 
 // Controllers users
@@ -96,8 +97,8 @@ app.get("/", homePageController);
 app.get("/contact", contactController);
 app.get("/articles/add", auth, createArticleController);
 app.get("/articles/:id", articleSingleController); // show article
-app.get("/articles/edit/:id", auth, articleUpdateController); // edit article
-app.put("/articles/:id", auth, articleSingleController); // update article
+app.get("/articles/edit/:id", auth, articleEditController); // edit article
+app.put("/articles/:id", auth, articleUpdateController); // update article
 app.post("/articles/post", auth, articleValidPost, articlePostController);
 app.post("/articles/:id", auth, articleDeleteController);
 
