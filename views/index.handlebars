@@ -49,9 +49,14 @@
                 </a>
                 <p>{{stripTags this.content}}</p>
                 <p>Publié par {{this.author}}, le {{ createdAt }}</p>
-                <form action="/article/{{ this._id }}/?_method=DELETE" method="post">
-                  <button type="submit">Effacer</button>
-                </form>
+                <div class="field">
+                  <form action="/articles/edit/{{ this._id }}" >
+                    <button type="submit">Modifier</button>
+                  </form>
+                  <form action="/articles/{{ this._id }}?_method=DELETE" method="POST">
+                    <button type="submit">Effacer</button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>

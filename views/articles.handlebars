@@ -3,7 +3,16 @@
         <h1 class="title">
             {{article.title}}
         </h1>
-        <p>{{ stripTags article.content}}</p>
         <img src="{{article.image}}">
+        <p>{{ stripTags article.content}}</p>
+
+        <div class="field">
+            <form action="/articles/edit/{{ article._id }}" >
+                <button type="submit">Modifier</button>
+            </form>
+            <form action="/article/{{ article._id }}/?_method=DELETE" method="POST">
+                <button type="submit">Effacer</button>
+            </form>
+        </div>
     </div>
 </section>

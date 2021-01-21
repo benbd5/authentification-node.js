@@ -14,6 +14,7 @@ const fileUpload = require("express-fileupload");
 const expressSession = require("express-session"); // pour les cookies
 const MongoStore = require("connect-mongo")(expressSession); // stock cookie dans mongoDB
 const flash = require("connect-flash");
+const methodOverride = require("method-override");
 const { stripTags } = require("./helpers/hbs");
 
 var helpers = require("handlebars-helpers")();
@@ -42,6 +43,7 @@ app.use(
   })
 );
 app.use(flash());
+app.use(methodOverride("_method"));
 
 // Static
 app.use(express.static("public"));
@@ -62,6 +64,7 @@ app.engine(
     },
   })
 );
+
 app.use("*", (req, res, next) => {
   res.locals.user = req.session.userId;
   console.log(res.locals.user);
@@ -74,6 +77,8 @@ const homePageController = require("./controllers/homePage");
 const contactController = require("./controllers/contact");
 const articleSingleController = require("./controllers/articleSingle");
 const articlePostController = require("./controllers/articlePost");
+const articleUpdateController = require("./controllers/articleUpdate");
+const articleDeleteController = require("./controllers/articleDelete");
 
 // Controllers users
 const userCreate = require("./controllers/userCreate");
@@ -90,8 +95,11 @@ app.use("/articles/add", auth);
 app.get("/", homePageController);
 app.get("/contact", contactController);
 app.get("/articles/add", auth, createArticleController);
-app.get("/articles/:id", articleSingleController);
+app.get("/articles/:id", articleSingleController); // show article
+app.get("/articles/edit/:id", auth, articleUpdateController); // edit article
+app.put("/articles/:id", auth, articleSingleController); // update article
 app.post("/articles/post", auth, articleValidPost, articlePostController);
+app.post("/articles/:id", auth, articleDeleteController);
 
 // Routes users
 app.get("/user/create", redirectAuth, userCreate);
