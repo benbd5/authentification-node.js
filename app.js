@@ -16,6 +16,7 @@ const MongoStore = require("connect-mongo")(expressSession); // stock cookie dan
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const { stripTags } = require("./helpers/hbs");
+require("dotenv").config();
 
 var helpers = require("handlebars-helpers")();
 
@@ -23,11 +24,14 @@ const auth = require("./middleware/auth");
 const redirectAuth = require("./middleware/redirectAuth");
 
 // Mongoose
-mongoose.connect("mongodb://localhost:27017/blog_philippe", {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  process.env.DATABASE_URL || "mongodb://localhost:27017/blog_philippe",
+  {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+  }
+);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
