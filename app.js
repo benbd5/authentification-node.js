@@ -54,8 +54,8 @@ app.use(express.static("public"));
 
 // Moment (Handlebars)
 var Handlebars = require("handlebars");
-var MomentHandler = require("handlebars.moment");
-MomentHandler.registerHelpers(Handlebars);
+// var MomentHandler = require("handlebars.moment");
+// MomentHandler.registerHelpers(Handlebars);
 
 // Handlebars
 app.set("view engine", "handlebars");
